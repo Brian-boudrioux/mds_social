@@ -22,19 +22,6 @@ const getOne = async (req, res, next) => {
   }
 };
 
-const createUser = async (req, res, next) => {
-  try {
-    const { pseudo, email, password } = req.body;
-    if (!pseudo || !email || !password) return res.status(400).json("all field is required");
-    const [result] = await userModel.insertOne(req.body);
-    const [[user]] = await userModel.readOne(result.insertId);
-    res.status(201).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json("Internal error server");
-  }
-};
-
 const updateUser = async (req, res, next) => {
   try {
     const user = req.body;
@@ -63,7 +50,6 @@ const deleteUser = async (req, res, next) => {
 export default {
   getAll,
   getOne,
-  createUser,
   updateUser,
   deleteUser,
 };
