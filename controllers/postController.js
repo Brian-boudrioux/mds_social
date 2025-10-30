@@ -24,8 +24,9 @@ const getOne = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { content, id_user } = req.body;
-    if (!content || !id_user ) return res.status(400).json("all field is required");
+    const { content } = req.body;
+    req.body.id_user = req.user.id;
+    if (!content) return res.status(400).json("all field is required");
     const [result] = await postModel.insertOne(req.body);
     const [[post]] = await postModel.readOne(result.insertId);
     res.status(201).json(post);

@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+import argon2 from "argon2";
 
 const getAll = async ({ res, next }) => {
   try {
@@ -26,6 +27,8 @@ const updateUser = async (req, res, next) => {
   try {
     const user = req.body;
     const id = Number(req.params.id);
+    if (req.user.id !== id) return res.status(401).json("Permission denied");
+    if (user.password) user.password = await argon2.hash(user.password);
     const [result] = await userModel.updateOne(id, user);
     if (result.affectedRows > 0) res.sendStatus(204);
     else res.sendStatus(404);
