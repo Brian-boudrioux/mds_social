@@ -5,11 +5,11 @@ import postRouter from "./routes/postRoutes.js";
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("Bienvenue sur l’API MyDigitalSchool!");
 });
 
-app.use(userRouter);
-app.use(postRouter);
+app.use("/api", userRouter);
+app.use("/api", postRouter);
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
