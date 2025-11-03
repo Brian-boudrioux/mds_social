@@ -14,7 +14,7 @@ const register = async (req, res, next) => {
 
     const hashedPassword = await argon2.hash(password);
     const [result] = await authModel.createUser(pseudo, email, hashedPassword);
-    if (result.affectedRows > 0) res.status(201).json({pseudo, email});
+    if (result.affectedRows > 0) res.status(201).json({id: result.insertId, pseudo, email});
   } catch (error) {
     console.error(error);
     res.status(500).json("Internal error server");
