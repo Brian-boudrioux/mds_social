@@ -19,6 +19,13 @@ describe("test routes /users : " , () => {
         expect(Array.isArray(response.body)).toBe(true);
     });
 
+    test("POST /api/register doit retourner une erreur 400 si un champ est manquant: ", async () => {
+        const response = await supertest(app).post("/api/register").send({pseudo: "toto", password: "aaaa"});
+
+        expect(response.status).toBe(400);
+        expect(response.body).toBe("all field is required");
+    });
+
     test("POST /api/register doit retourner la ressource user crée avec un status 201 : ", async () => {
         const response = await supertest(app).post("/api/register").send({pseudo: "toto", email: "a@a.fr", password: "aaaa"});
 
@@ -33,6 +40,36 @@ describe("test routes /users : " , () => {
         expect(response.status).toBe(200);
         expect(response.body.id).toBe(1);
         expect(response.body.email).toBe("a@a.fr");
+    });
+
+    test("PUT /api/users/:id doit mettre à jours les données de l'utilisateur :", async () => {
+        const { header } = await supertest(app).post("/api/login").send({ pseudo: "toto", email: "a@a.fr", password: "aaaa" });
+        const token = header.authorization.split(" ")[1];
+        const authHeaders = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        const response = await supertest(app).put("/api/users/1").set(authHeaders).send({pseudo: "tata"});
+
+        expect(response.status).toBe(204);
+    });
+
+    test("PUT /api/users/:id doit retoruner un status 401 si le token est manquant : ", async () => {
+        const response = await supertest(app).put("/api/users/100");
+
+        expect(response.status).toBe(401);
+    });
+
+    test("DELETE /api/users/:id doit supprimer l'utilisateur :", async () => {
+        const { header } = await supertest(app).post("/api/login").send({ pseudo: "toto", email: "a@a.fr", password: "aaaa" });
+        const token = header.authorization.split(" ")[1];
+        const authHeaders = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        const response = await supertest(app).delete("/api/users/1").set(authHeaders);
+
+        expect(response.status).toBe(204);
     });
 
     afterAll(async () => {
