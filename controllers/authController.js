@@ -32,7 +32,7 @@ const login = async (req, res) => {
         const isPasswordValid = await argon2.verify(user.password, password);
         if (!isPasswordValid) return res.status(400).json("password do not match");
 
-        const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        const token = jwt.sign({id: user.id, email: user.email, pseudo: user.pseudo}, process.env.JWT_SECRET, {expiresIn: "1h"});
 
         res.header("Authorization", `Bearer ${token}`).send();
     } catch(error) {

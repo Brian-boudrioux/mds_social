@@ -64,6 +64,27 @@ CREATE TABLE `users` (
 INSERT INTO `users` VALUES (1,'toto','t@t.fr','toto');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
+DROP TABLE IF EXISTS `private_messages`;
+CREATE TABLE private_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users (id),
+    FOREIGN KEY (receiver_id) REFERENCES users (id)
+);
+
+DROP TABLE IF EXISTS `messages`;
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users (id)
+);
+
 --
 -- Dumping routines for database 'mds_social'
 --
