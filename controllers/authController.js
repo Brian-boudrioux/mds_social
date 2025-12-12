@@ -5,29 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-const register = async (req, res, next) => {
-  try {
-
-    if (!req.body)
-      throw new ApiError(400, "Missing required fields");
-
-    const { pseudo, email, password } = req.body;
-    if (!pseudo || !email || !password) 
-      throw new ApiError(400, "all field is required");
-
-    const [[user]] = await authModel.findUserByEmail(email);
-    if (user) 
-      throw new ApiError(400, "user with specified email already exist");
-
-    const hashedPassword = await argon2.hash(password);
-    const [result] = await authModel.createUser(pseudo, email, hashedPassword);
-    if (result.affectedRows > 0) res.status(201).json({id: result.insertId, pseudo, email});
-  } catch (error) {
-    next(error);
-  }
-};
-
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
 
       if (!req.body)
@@ -55,5 +33,6 @@ const login = async (req, res) => {
 
 export default {
     register,
-    login
+    login,
+    loginVulnerable
 }
