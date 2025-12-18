@@ -12,7 +12,7 @@ export const loginLimiter = rateLimit({
 
 export const requestLimiter = rateLimit({
     windowMs: 300000, // Période de 5 minutes
-    max: 10, // Limite à 100 tentatives de login par IP
+    max: 100, // Limite à 100 tentatives de login par IP
     message: {
         message: "Trop de requetes effectuer. Réessayez dans 5 minutes."
     },

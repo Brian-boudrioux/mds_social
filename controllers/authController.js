@@ -25,7 +25,12 @@ const login = async (req, res, next) => {
 
         const token = jwt.sign({id: user.id, email: user.email, pseudo: user.pseudo}, process.env.JWT_SECRET, {expiresIn: "1h"});
 
-        res.header("Authorization", `Bearer ${token}`).send();
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Lax',
+          maxAge: 3600000
+        }).send();
     } catch(error) {
         next(error);
     }
