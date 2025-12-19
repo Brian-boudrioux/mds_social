@@ -11,13 +11,17 @@ import { requestLimiter } from "../middlewares/rateLimiter.js";
 
 const app = express();
 
-app.use(express.json());
+app.set("trust proxy", 1);
+
+app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 app.use(helmet({ strictTransportSecurity: true, xFrameOptions: true }));
 app.use(requestLimiter);
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://monsite.fr"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "X-Csrf-Token"],
   })
 );
 const csrfProtection = csurf({
